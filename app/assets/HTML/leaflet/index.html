@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Leaflet mobile example</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
+
+	<script src="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js"></script>
+
+	<style>
+		body {
+			padding: 0;
+			margin: 0;
+		}
+		html, body, #map {
+			height: 100%;
+		}
+	</style>
+</head>
+<body>
+	<div id="map"></div>
+	<script src='https://code.jquery.com/jquery-1.11.0.min.js'></script>
+	<script>
+		var container = $('.leaflet-popup-content-wrapper');
+		
+		// BASE LAYERS OPTIONS
+		var OpenStreetMap_Mapnik = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			maxZoom: 19,
+			attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+		});
+		
+		var OpenStreetMap_BlackAndWhite = L.tileLayer('http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png', {
+			maxZoom: 18,
+			attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+		});
+				
+		
+		var OpenTopoMap = L.tileLayer('http://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+			maxZoom: 16,
+			attribution: 'Map data: &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+		});
+		
+		var Thunderforest_OpenCycleMap = L.tileLayer('http://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png', {
+			attribution: '&copy; <a href="http://www.thunderforest.com/">Thunderforest</a>, &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+		});
+		
+		var Thunderforest_Transport = L.tileLayer('http://{s}.tile.thunderforest.com/transport/{z}/{x}/{y}.png', {
+			attribution: '&copy; <a href="http://www.thunderforest.com/">Thunderforest</a>, &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+			maxZoom: 19
+		});
+		
+		var Thunderforest_TransportDark = L.tileLayer('http://{s}.tile.thunderforest.com/transport-dark/{z}/{x}/{y}.png', {
+			attribution: '&copy; <a href="http://www.thunderforest.com/">Thunderforest</a>, &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+			maxZoom: 19
+		});
+		
+		//OpenStreetMap_Mapnik.addTo(map);
+
+		function onLocationFound(e) {
+			var radius = e.accuracy / 2;
+
+			L.marker(e.latlng).addTo(map)
+				.bindPopup("You are within " + radius + " meters from this point").openPopup();
+
+			L.circle(e.latlng, radius).addTo(map);
+		}
+
+		function onLocationError(e) {
+			alert(e.message);
+		}
+
+		/*
+		map.on('locationfound', onLocationFound);
+		map.on('locationerror', onLocationError);
+		*/
+		
+		var map = L.map('map', {
+			center: [47.9629748,24.1875427],
+			zoom: 4,
+			layers: [OpenStreetMap_Mapnik]
+		});
+		
+		var baseMaps = {
+			"OSM Mapnik": OpenStreetMap_Mapnik,
+			"OSM B&W": OpenStreetMap_BlackAndWhite,
+			"Open Topo Map": OpenTopoMap,
+			"Open Cycle Map": Thunderforest_OpenCycleMap,
+			"Transport Map": Thunderforest_Transport,
+			"Transport Dark Map": Thunderforest_TransportDark
+		};
+
+		/*
+		var overlayMaps = {
+			"Cities": cities
+		};
+		*/
+		L.control.layers(baseMaps).addTo(map);
+		
+		// FUNCTION ADD ANNOTATION
+		
+		// addAnnotation("balloon_beige.png",17,48,"PLANT NAME","obs_all.76","demo");addAnnotation("balloon_beige.png",20,48,"PLANT NAME","obs_all.76","demo")
+		function addAnnotation(featIdIn, image, longitude, latitude, title, subtitle, uidText) {
+			
+			var mapIcon = L.icon({
+				iconUrl: 'images/' + image,
+				//shadowUrl: 'leaf-shadow.png',
+
+				//iconSize:     [38, 95], // size of the icon
+				//shadowSize:   [50, 64], // size of the shadow
+				//iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+				//shadowAnchor: [4, 62],  // the same for the shadow
+				popupAnchor:  [20, 0] // point from which the popup should open relative to the iconAnchor
+			});
+		
+			var vec = "Ti.App.fireEvent('app:fromWebView', { message: 'event fired from WebView, handled in Titanium' });";
+			var annotationText = '<div onclick="alert( $(this).attr(\'featId\') ); '+vec+' " featId="'+featIdIn+'">' + title + '<br>' + subtitle + '<br>' + uidText+ '</div>';
+			
+			
+			
+				/*
+				annotationText.onclick = function() {
+				
+					alert("YOU CLICKED ON ANNOTATION");
+					// do whatever else you want to do - open accordion etc
+				};
+				*/
+			var marker = L.marker([latitude, longitude], {icon: mapIcon}).addTo(map).bindPopup(annotationText);
+		
+		}
+		
+		
+		
+		//map.locate({setView: true, maxZoom: 16, center: []});
+	</script>
+</body>
+</html>

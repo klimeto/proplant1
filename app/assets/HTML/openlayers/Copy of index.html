@@ -1,0 +1,246 @@
+<!doctype html>
+<html>
+  <head>
+    <script>
+        Ti.App.addEventListener("app:fromTitanium", function(e) {
+            //console.log("EVAL: "+e.message);
+            try{ eval(e.message); }catch(e){
+            	//console.log("###################CATCH");
+            }
+        });
+    </script>
+    <title>Mobile Examples</title>
+    <!-- the viewport is important for mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="ol3.css" type="text/css" />
+    <link rel="stylesheet" href="samples.css" type="text/css" />
+    <script src="ol3.js"></script>
+    <script>
+    		
+		var container, content, closer, overlay, mapExtent, osmsk, skfreemap1, osmcarto, sklanduse, osm, center, view, map, urls, tileUrlFunction, insertMode, vectorLayer; 
+    	function readyFunc(){
+    		document.getElementById('map').style.height = window.innerHeight + 'px'; 
+    		document.getElementById('map').style.width = window.innerWidth + 'px';
+    		try{ document.getElementsByClassName("ol-unselectable")[0].style.height = window.innerHeight + 'px'; }catch(e){} 
+		    		try{ document.getElementsByClassName("ol-unselectable")[0].style.width = window.innerWidth + 'px';  }catch(e){} 
+    		
+    		
+    		container = document.getElementById('popup');
+		      content = document.getElementById('popup-content');
+		      closer = document.getElementById('popup-closer');
+		
+		      /**
+		       * Add a click handler to hide the popup.
+		       * @return {boolean} Don't follow the href.
+		       */
+		      closer.onclick = function () {
+		      	overlay.setPosition(undefined);
+		      	closer.blur();
+		      	return false;
+		      };
+		
+		      /**
+		       * Create an overlay to anchor the popup to the map.
+		       */
+		      overlay = new ol.Overlay({
+		      		element : container,
+		      		autoPan : true,
+		      		autoPanAnimation : {
+		      			duration : 250
+		      		}
+		      	});
+		      mapExtent = [47.7145247, 16.7988747, 22.5884098, 49.6375827];
+		
+		      osmsk = new ol.layer.Tile({
+		      		//extent: ol.proj.transformExtent(mapExtent, 'EPSG:4326', 'EPSG:3857'),
+		      		source : new ol.source.XYZ({
+		      			crossOrigin : null,
+		      			url : '../../data/osm/{z}/{x}/{y}.png'
+		      			//urls: ['http://a.tiles.wmflabs.org/hikebike/{z}/{x}/{y}.png','http://b.tiles.wmflabs.org/hikebike/{z}/{x}/{y}.png','http://c.tiles.wmflabs.org/hikebike/{z}/{x}/{y}.png']
+		      			//tilePixelRatio: 2, // THIS IS IMPORTANT
+		      			//minZoom: 12,
+		      			//maxZoom: 16
+		      		})
+		      	});
+		
+		      skfreemap1 = new ol.layer.Tile({
+		      		//extent: ol.proj.transformExtent(mapExtent, 'EPSG:4326', 'EPSG:3857'),
+		      		source : new ol.source.XYZ({
+		      			crossOrigin : null,
+		      			//url: '../data/osm/{z}/{x}/{y}.png'
+		      			urls : ['http://a.tiles.wmflabs.org/hikebike/{z}/{x}/{y}.png', 'http://b.tiles.wmflabs.org/hikebike/{z}/{x}/{y}.png', 'http://c.tiles.wmflabs.org/hikebike/{z}/{x}/{y}.png'],
+		      			//getURL: get_my_url
+		      			//tilePixelRatio: 2, // THIS IS IMPORTANT
+		      			//minZoom: 12,
+		      			//maxZoom: 16
+		      		})
+		      	});
+		      osmcarto = new ol.layer.Tile({
+		      		//extent: ol.proj.transformExtent(mapExtent, 'EPSG:4326', 'EPSG:3857'),
+		      		source : new ol.source.XYZ({
+		      			crossOrigin : null,
+		      			urls : ['https://a.tile.openstreetmap.org/{z}/{x}/{y}.png', 'https://b.tile.openstreetmap.org/{z}/{x}/{y}.png', 'https://c.tile.openstreetmap.org/{z}/{x}/{y}.png'],
+		      		})
+		      	});
+		
+		      sklanduse = new ol.layer.Tile({
+		      		//extent: ol.proj.transformExtent(mapExtent, 'EPSG:4326', 'EPSG:3857'),
+		      		source : new ol.source.XYZ({
+		      			crossOrigin : null,
+		      			url : 'http://skpilot-viewer.virt.ics.muni.cz/geoserver/gwc/service/tms/1.0.0/sk_land_use:land_use_existing@EPSG:3857@png/{z}/{x}/{-y}.png'
+		      			//url: http://demo.opengeo.org/geoserver/gwc/service/tms/1.0.0/ne:ne@EPSG:900913@png/{z}/{x}/{y}.png
+		      		})
+		      	});
+		
+		      osm = new ol.layer.Tile({
+		      		source : new ol.source.OSM()
+		      	});
+		      center = ol.proj.transform([20.6039, 48.5937], 'EPSG:4326', 'EPSG:3857');
+		      view = new ol.View({
+		      		center : center,
+		      		zoom : 5,
+		      		minZoom : 2,
+		      		maxZoom : 22
+		      	});
+		      map = new ol.Map({
+		      		overlays : [overlay],
+		      		target : 'map',
+		      		layers : [osmcarto],
+		      		view : view,
+		
+		      	});
+				
+				
+				// PASTNUTE
+				var currentlyOpened;
+				var currentInstance;
+		      	try{
+		      		map.removeEventListener('singleclick', currentInstance );
+		      		map.removeEventListener('singleclick', currentFuncInst );
+		      	}catch(e){};
+		      	 
+    		      	
+		      	currentInstance = map.on('singleclick', function currentFuncInst(evt) {
+		      		 var feature = map.forEachFeatureAtPixel(evt.pixel,		  
+						  
+						  function(feature, layer) {
+							return feature;
+						  });
+					  if (feature) {
+					  	var featId = feature.get('featId');
+					  	currentlyOpened=featId;
+					  	
+					  	try{ Ti.App.fireEvent('app:fromWebView', { message: currentlyOpened });  }catch(e){}
+					  	alert ("KLIKOL SOM:" + featId);
+						return;
+					}
+					
+		      	});
+		      	
+				
+		      // PROVIDE URLs TO INDIVIDUAL MAP TILES
+		      urls = map.getLayers().item(0).getSource();
+		      tileUrlFunction = urls.getTileUrlFunction();
+		      	urls.on('tileloadend', function (evt) {
+		      	});
+		      
+		      // INSERT ANNOTATION
+		      insertMode = false;
+		
+		      map.on('click', function (evt) {
+		      	if (insertMode) {
+		      		var lonlat = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
+		      		var lon = lonlat[0];
+		      		var lat = lonlat[1];
+		      	}
+		      });
+		
+		      
+			  
+		//addAnnotation("1","balloon_beige.png",17,48,"PLANT NAME","obs_all.76","demo");addAnnotation("2","balloon_beige.png",20,48,"PLANT NAME","obs_all.76","demo");
+				window.onresize= function(){
+				    document.getElementById("map").style.height = window.innerHeight + 'px';
+				    document.getElementById("map").style.width = window.innerWidth + 'px';
+				    
+		    		try{ document.getElementsByClassName("ol-unselectable")[0].style.height = window.innerHeight + 'px'; }catch(e){} 
+		    		try{ document.getElementsByClassName("ol-unselectable")[0].style.width = window.innerWidth + 'px';  }catch(e){} 
+				};
+    	}
+    	
+    	// ADD ANNOTAITON FCION
+    	var myEVT;
+    	function addAnnotation(featIdIn, image, longitude, latitude, title, subtitle, uidText) {
+		      	var iconFeatures = [];
+		      	var iconFeature = new ol.Feature({
+		      			geometry : new ol.geom.Point(ol.proj.transform([longitude, latitude], 'EPSG:4326', 'EPSG:3857')),
+		      			featId : featIdIn,
+						name : title,
+		      			subtitle : subtitle,
+		      			user : uidText
+		      		});
+		
+		      	iconFeatures.push(iconFeature);
+		
+		      	var vectorSource = new ol.source.Vector({
+		      			features : iconFeatures //add an array of features
+		      		});
+		
+		      	var iconStyle = new ol.style.Style({
+		      			image : new ol.style.Icon(/** @type {olx.style.IconOptions} */
+		      				({
+		      					anchor : [20, 0],
+		      					anchorXUnits : 'pixels',
+		      					anchorYUnits : 'pixels',
+		      					opacity : 0.75,
+		      					src : 'images/' + image
+		      				}))
+		      		});
+		
+		      	vectorLayer = new ol.layer.Vector({
+		      			source : vectorSource,
+		      			style : iconStyle
+		      		});
+		      	map.addLayer(vectorLayer);
+		      	/**
+		      	 * Add a click handler to the map to render the popup.
+		      	 */
+				 
+				
+		}
+		      	
+		      	
+    	// SWITCH INSERT ENABLED DISABLED
+    	function insertEnable() {
+	      	insertMode = true;
+	    }
+	    function insertDisable() {
+	    	////console.log('####  INSERT MODE IS DEACTIVE ####');
+	      	insertMode = false;
+	    }
+	    
+	    function removeAllAnnotations()
+	    {
+	    	
+	    	
+	    	features = [];
+            features.length = 0;
+            vectorLayer.destroyFeatures();
+            
+	    }
+    </script>
+  </head>
+  <body onload="readyFunc()">
+    <div id="popup" class="ol-popup">
+		  <a href="#" id="popup-closer" class="ol-popup-closer">
+		  	
+		  </a>
+		  <div id="popup-content">
+		  	
+		  </div>
+	</div>
+	<div id="map" class="full-map">
+    	
+    </div>
+    
+  </body>
+</html>

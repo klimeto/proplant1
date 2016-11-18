@@ -1,0 +1,71 @@
+"View": {
+	backgroundColor: "transparent",
+	height: Ti.UI.SIZE,
+	width: Ti.UI.Fill
+},
+"TextField": {
+	color: "#363636",
+	height: "32dp",
+	width: "80%",
+	backgroundColor: "transparent",
+	borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
+	font: {fontSize: "14dp"},
+	bottom: "10dp"
+},
+"Label": {
+	color: "#fff",
+	shadowOffset: 1,
+	shadowColor: "#363636"
+},
+"TextField[platform=android]": {
+	borderRadius: "5dp",
+	backgroundColor: "#fff"
+},
+".content": {
+	layout: "vertical",
+	opacity: 0
+},
+".link": {
+	font: {fontSize: "12dp"},
+	bottom: "10dp"
+},
+".submit": {
+	bottom: "10dp",
+	color: "#fff",
+	backgroundColor: "#ba3b56",
+	borderRadius: "5dp",
+	font: {fontSize: "14dp", fontWeight: "bold"},
+	backgroundImage: "/images/com.appcelerator.acslogin/button.png",
+	height: "32dp",
+	width: "80%"
+},
+".submit[platform=ios]": {
+	style: Titanium.UI.iPhone.SystemButtonStyle.PLAIN
+},
+".user": {
+	hintText: "Username"
+},
+".email": {
+	hintText: "Email"
+},
+".pass": {
+	hintText: "Password",
+	passwordMask: true
+},
+".confirmPass": {
+	hintText: "Confirm Password",
+	passwordMask: true
+},
+"#message": {
+	width: "80%",
+	height: Ti.UI.SIZE,
+	textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
+	font: {fontSize: "14dp"},
+	bottom: "10dp"
+},
+"#loginView": {
+	opacity: 100
+},
+"#container": {
+	layout: "vertical"
+}

@@ -1,0 +1,27 @@
+<Alloy>
+	<View id="container">
+		<Label id="message"/>
+		<View id="content">
+			<View id="loginView" class="content">
+				<TextField class="user" id="loginUser"/>
+				<TextField class="pass" id="loginPass"/>
+				<Button class="submit" id="loginSubmit" onClick="login">Login</Button>
+				<Label class="link" onClick="showRemind">Forgot your password?</Label>
+				<Button class="submit" id="createLink" onClick="showCreate">Create Account</Button>
+			</View>
+			<View id="remindView" class="content">
+				<TextField class="email" id="remindEmail"/>
+				<Button class="submit" id="emailSubmit" onClick="remind">Remind Me!</Button>
+				<Label class="link" onClick="showLogin">Login</Label>
+			</View>
+			<View id="createView" class="content">
+				<TextField class="user" id="createUser"/>
+				<TextField class="email" id ="createEmail"/>
+				<TextField class="pass" id="createPass"/>
+				<TextField class="confirmPass" id="createConfirm"/>
+				<Button class="submit" id="createSubmit" onClick="create">Create Account</Button>
+				<Label class="link" onClick="showLogin">Login</Label>
+			</View>
+		</View>
+	</View>
+</Alloy> 

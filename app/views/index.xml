@@ -1,0 +1,47 @@
+<Alloy>
+	<TabGroup>
+		<Tab title="HOME" id="tabHome">
+			<Window class="window" id="winHome" id="window0">
+				<ScrollView>
+				<Label id="homeLabel1" textAlign="Ti.UI.TEXT_ALIGNMENT_CENTER" text="Welcome to Proplant Monitor Android App" color="#3C4037" top="3%" width="Ti.UI.SIZE" height="Ti.UI.SIZE"/>
+				<ImageView id="imageLogoSmal" image="/images/proplant_logo.png" top="15%" width="100"/>
+				
+				<View id="viewLogin" top="50%" borderColor="#283618" borderRadius="5" height="35%" left="5%" width="90%">
+					<Label id="nicknameLabel" color="#3C4037" text="Nickname:" top="10%" left="5%"/>
+					<TextField id="nicknameField" focusable="false" top="30%" width="90%" left="5%" borderWidth="2" borderColor="#283618" borderRadius="5" color="#3C4037" />
+					<Button id="buttonLogin" bottom="10%" right="5%" backgroundColor="#283618" width="30%" >Login</Button>
+					<Button id="buttonLogout" bottom="10%" right="5%" backgroundColor="#283618" width="30%" onClick="logout">Logout</Button>
+				</View>
+				<Button id="buttonProjectPage" bottom="3%" right="5%" backgroundColor="#283618" width="90%" height="Ti.UI.SIZE">Proplant Project Web Site</Button>
+				</ScrollView>
+				</Window>
+		</Tab>
+		<Tab title="DATA" id="tabData" onSelected="loaderViewDataFunc">
+			<Window title="Loader View" id="window1" class="window">
+				<ScrollView>
+				<Label id="dataLabel1" text="Proplant Data Store" textAlign="Ti.UI.TEXT_ALIGNMENT_CENTER" color="#3C4037" top="3%" width="Ti.UI.SIZE" height="Ti.UI.SIZE"/>
+				<TextField id="endpointURL" value="http://bolegweb.geof.unizg.hr/geoserver/proplant/ows" editable="false" width="Ti.UI.SIZE" height="Ti.UI.SIZE" top="8%"/>
+				<Button id="buttonRetrieveDatasets" onClick="buttonRetrieveDatasetsFunc" backgroundColor="#283618" width="30%" top="15%" right="5%">Server Data</Button>
+				<Button id="buttonLocalData" onClick="buttonLocalDataFunc" backgroundColor="#283618" width="30%" top="15%" left="5%">Local Data</Button>
+				<View id="window1LoaderView" top="40%" left="5%" width="90%" height="40%" borderColor="#283618" borderRadius="5">
+				<Label id="pushInfoLabel" text="Push info label" ></Label>
+				</View>
+				<Button id="buttonPushData" top="85%" backgroundColor="#283618" width="30%" right="5%">Push</Button>
+				<Button id="buttonDontPushData" top="85%" backgroundColor="#283618" width="30%" left="5%">Revert</Button>
+				</ScrollView>
+			</Window>
+		</Tab>
+		<Tab title="MAP" id="tabMap">
+			<Window title="Map View" id="window2" class="window">
+				<View id="mapToolbar" borderWidth="1" borderColor="#283618" borderRadius="5" left="10" width="100" height="200" backgroundColor="#B9E0AE" bottom="2.5%">
+					<ScrollView>
+						<Label id="mapToolboxLabel" color="#3C4037" text="Toolbox" top="5" width="90" height="40" textAlign="Ti.UI.TEXT_ALIGNMENT_CENTER"/>
+						<Button id="locate" onClick="locate" backgroundColor="#283618" width="90" height="40" top="50">Locate</Button>
+						<Button id="addGPS" onClick="addGPS" backgroundColor="#283618" width="90" height="40" top="100">Observe</Button>
+						<Button id="addManually" onClick="addManually" backgroundColor="#283618" width="90" height="40" top="150">Insert</Button>
+					</ScrollView>
+				</View>
+			</Window>
+		</Tab>
+	</TabGroup>
+</Alloy>
